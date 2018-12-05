@@ -1,17 +1,49 @@
-<template>
-  <app-graph class="graph">
-    <h2 class="title"></h2>
-    <div class="graph-container">
-    </div>
-  </app-graph>
-</template>
-
 <script>
+import { Line } from 'vue-chartjs'
+
 export default {
+  extends: Line,
   name: 'Graph',
+  props: {
+    values: {
+      default: []
+    }
+  },
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      set1: [],
+      set2: []
+    }
+  },
+  mounted () {
+    this.renderGraph()
+  },
+  watch: {
+    values (values) {
+      if (values) {
+        this.set1 = values.map(val => val.value1)
+        this.set2 = values.map(val => val.value2)
+        this.renderGraph()
+      }
+    }
+  },
+  methods: {
+    renderGraph () {
+      this.renderChart({
+        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+        datasets: [
+          {
+            label: 'GitHub Commits',
+            fill: false,
+            data: this.set1
+          },
+          {
+            label: 'GitHub Commits 2',
+            fill: false,
+            data: this.set2
+          }
+        ]
+      })
     }
   }
 }
