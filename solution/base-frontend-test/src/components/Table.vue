@@ -3,30 +3,16 @@
     <table class="table">
       <thead>
         <tr>
-          <th scope="col">#</th>
-          <th scope="col">First</th>
-          <th scope="col">Last</th>
-          <th scope="col">Handle</th>
+          <th scope="col">Date/time</th>
+          <th scope="col">Value 1</th>
+          <th scope="col">Value 2</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <th scope="row">1</th>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>@mdo</td>
-        </tr>
-        <tr>
-          <th scope="row">2</th>
-          <td>Jacob</td>
-          <td>Thornton</td>
-          <td>@fat</td>
-        </tr>
-        <tr>
-          <th scope="row">3</th>
-          <td>Larry</td>
-          <td>the Bird</td>
-          <td>@twitter</td>
+        <tr v-for="(value, index) in values" :key="index">
+          <td>{{ value.timestamp }}</td>
+          <td>{{ value.value1 }}</td>
+          <td>{{ value.value2 }}</td>
         </tr>
       </tbody>
     </table>
@@ -36,39 +22,15 @@
 <script>
 export default {
   name: 'Table',
-  data () {
-    return {
-      fields: [
-        {
-          // A column that needs custom formatting,
-          // calling formatter 'fullName' in this app
-          key: 'name',
-          label: 'Full Name',
-          formatter: 'fullName'
-        },
-        // A regular column
-        'age',
-        {
-          // A regular column with custom formatter
-          key: 'sex',
-          formatter: (value) => { return value.charAt(0).toUpperCase() }
-        },
-        {
-          // A virtual column with custom formatter
-          key: 'birthYear',
-          label: 'Calculated Birth Year',
-          formatter: (value, key, item) => {
-            return (new Date()).getFullYear() - item.age
-          }
-        }
-      ],
-      items: [
-        { name: { first: 'John', last: 'Doe' }, sex: 'Male', age: 42 },
-        { name: { first: 'Jane', last: 'Doe' }, sex: 'Female', age: 36 },
-        { name: { first: 'Rubin', last: 'Kincade' }, sex: 'male', age: 73 },
-        { name: { first: 'Shirley', last: 'Partridge' }, sex: 'female', age: 62 }
-      ]
+  props: {
+    values: {
+      default: []
     }
+  },
+  data () {
+  },
+  computed: {
+
   },
   methods: {
     fullName (value) {

@@ -1,7 +1,19 @@
 <template>
   <div id="app">
-    <Graph :values="values"/>
-    <Table/>
+    <article class="graph-container">
+      <div class="form-group">
+        <label for="timeSelector">Example select</label>
+        <select class="form-control" id="timeSelector">
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5</option>
+        </select>
+      </div>
+      <Graph :values="values"/>
+    </article>
+    <Table :values="values"/>
   </div>
 </template>
 
@@ -21,9 +33,12 @@ export default {
     Table
   },
   created () {
-    console.log('before')
-    this.$http.get(process.env.SERVER + '/reading').then(response => {
-      // get body data
+    const config = {
+      params: {
+        limit: 50
+      }
+    }
+    this.$http.get(process.env.SERVER + '/reading', config).then(response => {
       this.values = response.body
       console.log(this.values)
     },

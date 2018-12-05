@@ -21,28 +21,45 @@ export default {
   watch: {
     values (values) {
       if (values) {
-        this.set1 = values.map(val => val.value1)
-        this.set2 = values.map(val => val.value2)
+        this.set1 = values.map(val => this.getSetData(val.value1, val.timestamp))
+        this.set2 = values.map(val => this.getSetData(val.value2, val.timestamp))
         this.renderGraph()
       }
     }
   },
   methods: {
+    getSetData (value, time) {
+      return {
+        x: new Date(time),
+        y: value
+      }
+    },
     renderGraph () {
       this.renderChart({
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
         datasets: [
           {
-            label: 'GitHub Commits',
-            fill: false,
+            label: 'Value 1',
+            backgroundColor: 'rgba(255, 0, 255, 0.3)',
+            borderColor: 'rgb(255, 0, 255)',
+            fill: 'start',
             data: this.set1
           },
           {
-            label: 'GitHub Commits 2',
-            fill: false,
+            label: 'Value 2',
+            backgroundColor: 'rgba(0, 255, 255, 0.3)',
+            borderColor: 'rgb(0, 255, 255)',
+            fill: 'bottom',
             data: this.set2
           }
         ]
+      },
+      {
+        scales: {
+          xAxes: [{
+            type: 'time',
+            distribution: 'linear'
+          }]
+        }
       })
     }
   }
