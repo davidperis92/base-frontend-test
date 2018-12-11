@@ -1,31 +1,27 @@
 <template>
-  <div id="app">
-    <article class="graph-container">
-      <div class="form-group">
-        <label for="timeSelector">Example select</label>
-        <select class="form-control" id="timeSelector">
-          <option>1</option>
-          <option>2</option>
-          <option>3</option>
-          <option>4</option>
-          <option>5</option>
-        </select>
+  <div id="app" class="container">
+    <article class="graph-container row">
+      <div class="form-group offset-8 col-4">
+        <v-select v-model="valueSelected" :options="selectOptions" :searchable="false"></v-select>
       </div>
-      <Graph :values="values"/>
+      <Graph :values="values" class="col-12"/>
     </article>
-    <Table :values="values"/>
+    <Table :values="values" @update-value="onUpdateValue"/>
   </div>
 </template>
 
 <script>
 import Graph from './components/Graph'
 import Table from './components/Table'
+import { SELECTOR_OPTIONS } from './core/constants/graph-selector-options.js'
 
 export default {
   name: 'App',
   data: () => {
     return {
-      values: []
+      values: [],
+      valueSelected: null,
+      selectOptions: SELECTOR_OPTIONS
     }
   },
   components: {
@@ -33,18 +29,47 @@ export default {
     Table
   },
   created () {
-    const config = {
-      params: {
-        limit: 50
-      }
+    this.fetchReadings()
+  },
+  watch: {
+    valueSelected () {
+      this.fetchReadings()
     }
-    this.$http.get(process.env.SERVER + '/reading', config).then(response => {
-      this.values = response.body
-      console.log(this.values)
+  },
+  methods: {
+    fetchReadings () {
+      this.$http.get(process.env.SERVER + '/reading', this.getParamsConfig()).then(
+        response => {
+          this.values = response.body
+          console.log(this.values)
+        },
+        error => {
+          console.error(error)
+        })
     },
-    error => {
-      console.error(error)
-    })
+    getParamsConfig () {
+      const date = new Date()
+      const params = {
+        limit: 100
+      }
+      if (this.valueSelected) {
+        const newDate = date.setHours(date.getHours() - this.valueSelected.value)
+        params.start = this.$moment(newDate).format('YYYY-MM-DDTHH:mm:ss')
+      }
+      return {
+        params
+      }
+    },
+    onUpdateValue (event) {
+      this.$http.put(process.env.SERVER + '/reading', this.getParamsConfig()).then(
+        response => {
+          this.values = response.body
+          console.log(this.values)
+        },
+        error => {
+          console.error(error)
+        })
+    }
   }
 }
 </script>
@@ -57,5 +82,9 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+.graph {
+  height: 500px;
 }
 </style>

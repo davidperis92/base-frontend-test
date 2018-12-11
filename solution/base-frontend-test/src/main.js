@@ -3,9 +3,13 @@
 import Vue from 'vue'
 import App from './App'
 import VueResource from 'vue-resource'
+import vSelect from 'vue-select'
+import moment from 'vue-moment'
 import 'bootstrap/dist/css/bootstrap.css'
 
 Vue.use(VueResource)
+Vue.use(moment)
+Vue.component('v-select', vSelect)
 
 Vue.config.productionTip = false
 
