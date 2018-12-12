@@ -23,7 +23,8 @@ export default {
     return {
       values: [],
       valueSelected: null,
-      selectOptions: SELECTOR_OPTIONS
+      selectOptions: SELECTOR_OPTIONS,
+      readingsUrl: process.env.SERVER + '/reading'
     }
   },
   components: {
@@ -40,7 +41,7 @@ export default {
   },
   methods: {
     fetchReadings () {
-      this.$http.get(process.env.SERVER + '/reading', this.getParamsConfig()).then(
+      this.$http.get(this.readingsUrl, this.getParamsConfig()).then(
         response => {
           this.values = response.body
         },
@@ -62,7 +63,7 @@ export default {
       }
     },
     onUpdateValue (body) {
-      this.$http.put(process.env.SERVER + '/reading', body).then(
+      this.$http.put(this.readingsUrl, body).then(
         response => {
           this.fetchReadings()
         },
