@@ -6,7 +6,9 @@
       </div>
       <Graph :values="values" class="col-12"/>
     </article>
-    <Table :values="values" @update-value="onUpdateValue"/>
+    <article class="table-container row">
+      <Table :values="values" @update-value="onUpdateValue" class="col"/>
+    </article>
   </div>
 </template>
 
@@ -41,7 +43,6 @@ export default {
       this.$http.get(process.env.SERVER + '/reading', this.getParamsConfig()).then(
         response => {
           this.values = response.body
-          console.log(this.values)
         },
         error => {
           console.error(error)
@@ -60,11 +61,10 @@ export default {
         params
       }
     },
-    onUpdateValue (event) {
-      this.$http.put(process.env.SERVER + '/reading', this.getParamsConfig()).then(
+    onUpdateValue (body) {
+      this.$http.put(process.env.SERVER + '/reading', body).then(
         response => {
-          this.values = response.body
-          console.log(this.values)
+          this.fetchReadings()
         },
         error => {
           console.error(error)

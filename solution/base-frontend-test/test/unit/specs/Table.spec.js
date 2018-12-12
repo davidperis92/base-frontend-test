@@ -1,11 +1,18 @@
 import Vue from 'vue'
-import HelloWorld from '@/components/HelloWorld'
+import Table from '@/components/Table'
+import readings from '../mocks/readings';
 
-describe('HelloWorld.vue', () => {
-  it('should render correct contents', () => {
-    const Constructor = Vue.extend(HelloWorld)
-    const vm = new Constructor().$mount()
-    expect(vm.$el.querySelector('.hello h1').textContent)
-      .to.equal('Welcome to Your Vue.js App')
+describe('Table.vue', () => {
+  it('should render table', done => {
+    const Constructor = Vue.extend(Table)
+    const vm = new Constructor({ values: readings }).$mount()
+    vm.values = readings
+    Vue.nextTick(() => {
+      expect(vm.$el.querySelector('table'))
+        .to.be.defined
+      expect(vm.$el.querySelectorAll('table tbody tr').length)
+        .to.equal(3)
+      done()
+    })
   })
 })

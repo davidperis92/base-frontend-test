@@ -1,11 +1,10 @@
 import Vue from 'vue'
-import HelloWorld from '@/components/HelloWorld'
+import Graph from '@/components/Graph'
 
-describe('HelloWorld.vue', () => {
-  it('should render correct contents', () => {
-    const Constructor = Vue.extend(HelloWorld)
-    const vm = new Constructor().$mount()
-    expect(vm.$el.querySelector('.hello h1').textContent)
-      .to.equal('Welcome to Your Vue.js App')
+describe('Graph.vue', () => {
+  it('should render graph', () => {
+    const vm = new Vue(Graph).$mount()
+    expect(vm.$el.querySelector('canvas'))
+      .to.be.defined
   })
 })

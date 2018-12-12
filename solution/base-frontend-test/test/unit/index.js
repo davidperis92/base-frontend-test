@@ -1,4 +1,11 @@
 import Vue from 'vue'
+import VueResource from 'vue-resource'
+import vSelect from 'vue-select'
+import moment from 'vue-moment'
+
+Vue.use(VueResource)
+Vue.use(moment)
+Vue.component('v-select', vSelect)
 
 Vue.config.productionTip = false
 

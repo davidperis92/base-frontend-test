@@ -11,12 +11,12 @@
       <tr v-for="(value, index) in values" :key="index">
         <td>{{ value.timestamp }}</td>
         <td>
-          <span id="span1" @click="showInput(1)">{{ value.value1 }}</span>
-          <input id="input1" @blur="updateValue(1, $event)" :value="value.value1">
+          <span v-if="!isShowingInput(index, 1)" id="span1" @click="showInput(index, 1, $event)">{{ value.value1 }}</span>
+          <input type="number" v-if="isShowingInput(index, 1)" id="input1" @blur="updateValue(index, 1, $event)" :value="value.value1">
         </td>
         <td>
-          <span id="span2" @click="showInput(2)">{{ value.value2 }}</span>
-          <input id="input2" @blur="updateValue(2, $event)" :value="value.value2">
+          <span v-if="!isShowingInput(index, 2)" id="span2" @click="showInput(index, 2, $event)">{{ value.value2 }}</span>
+          <input type="number" v-if="isShowingInput(index, 2)" id="input2" @blur="updateValue(index, 2, $event)" :value="value.value2">
         </td>
       </tr>
     </tbody>
@@ -32,7 +32,10 @@ export default {
     }
   },
   data: () => {
-    return {}
+    return {
+      showingRow: null,
+      showingCol: null
+    }
   },
   computed: {
 
@@ -41,8 +44,26 @@ export default {
     fullName (value) {
       return `${value.first} ${value.last}`
     },
-    updateValue (index, event) {
-      this.$emit('update-value', {index, value: event.value})
+    isShowingInput (rowIndex, colIndex) {
+      return this.showingRow === rowIndex && this.showingCol === colIndex
+    },
+    showInput (rowIndex, colIndex, $event) {
+      this.showingRow = rowIndex
+      this.showingCol = colIndex
+    },
+    updateValue (rowIndex, colIndex, $event) {
+      const value = $event.target.value
+      const item = this.values[rowIndex]
+      const body = {
+        id: item.id,
+        value1: item.value1,
+        value2: item.value2
+      }
+      this.showingRow = null
+      this.showingCol = null
+      if (colIndex === 1) { body.value1 = value }
+      if (colIndex === 2) { body.value2 = value }
+      this.$emit('update-value', body)
     }
   }
 }
